@@ -1,0 +1,20 @@
+# My Angular Application
+
+## Running Unit Tests
+
+### Prerequisites
+- Node.js and npm installed on your machine.
+
+### Installation
+1. Clone this repository.
+2. Navigate to the project directory.
+3. Run `npm install` to install dependencies.
+4. Install Angular CLI globally (if not already installed) using `npm install -g @angular/cli`.
+
+### Running Tests
+- Run `ng test` to execute unit tests.
+- Open your browser and navigate to the URL displayed by Karma to view test results.
+
+### Viewing Coverage Reports
+- After running tests, coverage reports will be generated in the `coverage` directory.
+- Open the `index.html` file in the `coverage` directory using a web browser to view detailed coverage reports.
