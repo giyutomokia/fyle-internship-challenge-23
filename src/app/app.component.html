@@ -1,5 +1,60 @@
-<div class="grid h-screen place-items-center">
-  <div class="font-bold text-3xl">
-    Fyle Internship Challenge
+<div class="container">
+  <!-- Search input field -->
+  <div class="search-container">
+    <input type="text" placeholder="Enter GitHub Username" [(ngModel)]="username" class="input-field">
+    <button (click)="search()" class="search-button">Search</button>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="loading" class="loading-skeleton">
+    <div class="skeleton-avatar"></div>
+    <div class="skeleton-info"></div>
+  </div>
+
+  <!-- User profile -->
+  <div *ngIf="user && !loading" class="user-profile">
+    <div class="avatar">
+      <img [src]="user.avatar_url" alt="User Avatar">
+    </div>
+    <div class="user-details">
+      <h2>{{ user.name }}</h2>
+      <p>{{ user.bio }}</p>
+      <p>{{ user.location }}</p>
+      <a [href]="user.html_url" target="_blank" class="github-link">GitHub Profile</a>
+    </div>
+  </div>
+
+  <!-- Repository list -->
+  <div class="repo-container" *ngIf="repositories.length > 0">
+    <div *ngFor="let repo of pagedRepositories" class="repo">
+      <div class="repo-header">
+        <h3 class="repo-name">{{ repo.name }}</h3>
+        <div class="languages">
+          <span *ngFor="let language of repo.languages" class="language">{{ language }}</span>
+        </div>
+        <p class="top-language">Top Language: {{ repo.topLanguage }}</p>
+      </div>
+      <p class="repo-description">{{ repo.description }}</p>
+    </div>
+  </div>
+
+  <!-- Zero state message -->
+  <div class="zero-state" *ngIf="!loading && repositories.length === 0">
+    No repositories found.
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="repositories.length > 0">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
   </div>
 </div>
+
+<!-- Page size select -->
+<select [(ngModel)]="pageSize" (change)="onPageSizeChange($event)" class="page-size-select">
+  <option value="10">10 per page</option>
+  <option value="25">25 per page</option>
+  <option value="50">50 per page</option>
+  <option value="100">100 per page</option>
+</select>
