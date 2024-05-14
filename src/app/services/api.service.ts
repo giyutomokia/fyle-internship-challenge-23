@@ -9,12 +9,13 @@ import { catchError } from 'rxjs/operators';
 export class ApiService {
 
   constructor(private httpClient: HttpClient) { }
+  repositories: any[] = [];
 
-  getUser(Username: string): Observable<any> {
-    if (!Username) {
-      return throwError('Username cannot be empty.');
+  getUser(username: string): Observable<any> {
+    if (!username) {
+      return throwError('Username is empty.');
     }
-    return this.httpClient.get(`https://api.github.com/users/${Username}`).pipe(
+    return this.httpClient.get(`https://api.github.com/users/${username}`).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Error fetching user data:', error);
         return throwError('Error fetching user data. Please try again later.');
@@ -31,11 +32,11 @@ export class ApiService {
     );
   }
 
-  getRepos(Username: string): Observable<any[]> {
-    if (!Username) {
-      return throwError('Username cannot be empty.');
+  getRepos(username: string): Observable<any[]> {
+    if (!username) {
+      return throwError('Username is empty.');
     }
-    return this.httpClient.get<any[]>(`https://api.github.com/users/${Username}/repos`).pipe(
+    return this.httpClient.get<any[]>(`https://api.github.com/users/${username}/repos`).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Error fetching repositories:', error);
         return throwError('Error fetching repositories. Please try again later.');
@@ -49,8 +50,16 @@ export class ApiService {
   totalPages: number = 1;
   pagedRepositories: any[] = [];
 
-  setPage(page: number) {
+  setPage(page: number){
     this.currentPage = page;
+    this.getRepos('username').subscribe(
+      (repos: any[]) => {
+        this.pagedRepositories = repos;
+      },
+      error => {
+        console.error('Error fetching paged repositories:', error);
+      }
+    );
     // Logic to fetch paged repositories based on the current page
   }
 
